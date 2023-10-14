@@ -15,7 +15,7 @@ library(p8105.datasets)
 knitr::opts_chunk$set(
 	echo = TRUE,
 	warning = FALSE,
-	fig.width = 8, 
+	fig.width = 9, 
   fig.height = 6,
   out.width = "90%"
 )
@@ -163,6 +163,15 @@ theme(legend.position = "right")
 
 Make a two-panel plot showing, for the years 2006, and 2010, distribution of data_value for responses (“Poor” to “Excellent”) among locations in NY State.
 ```{r}
-
+brfss_df |>
+  filter(state == "NY" , year %in% c(2006, 2010)) |>
+  ggplot(aes(x = response, y = data_value)) +
+  geom_boxplot() +
+  labs(title = "Distribution of data_value by Response in NY State",
+       x = "response",
+       y = "data_value") +
+  facet_grid(. ~ year) +
+  theme_bw()
 ```
 
+* It can be seen that there is a significant increase in the `data_value` for `Very Good` response in NY State from 2006 to 2010.
