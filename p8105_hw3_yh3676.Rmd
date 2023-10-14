@@ -5,7 +5,7 @@ date: "2023-10-13"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup}
 library(tidyverse)
 library(ggridges)
 library(patchwork)
@@ -92,4 +92,29 @@ instacart |>
     names_from = order_dow, 
     values_from = mean_hour) |>
   knitr::kable(digits = 2)
+```
+
+## Problem 2
+
+Read in `brfss_smart2010` data.
+
+```{r}
+library(p8105.datasets)
+data("brfss_smart2010")
+```
+
+First, do some data cleaning.
+
+```{r}
+brfss_df = 
+  brfss_smart2010 |>
+  # format the data to use appropriate variable names
+  janitor::clean_names() |> 
+  rename(state = locationabbr, location = locationdesc) |>
+  # focus on the "Overall Health” topic
+  filter(topic == "Overall Health") |>
+  # include only responses from “Excellent” to “Poor”
+  filter(response %in% c("Excellent", "Very good", "Good", "Fair", "Poor" )) |>
+  # organize responses as a factor taking levels ordered from “Poor” to “Excellent”
+  mutate(response = factor(response, levels = c("Poor", "Fair", "Good", "Very good", "Excellent")))
 ```
