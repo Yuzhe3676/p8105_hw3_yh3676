@@ -32,7 +32,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ## Problem 1
 
-Read in the data.
+#### Read in the data
 
 ```{r}
 data("instacart")
@@ -41,7 +41,8 @@ instacart =
   instacart |> 
   as_tibble()
 ```
- Answer questions about the data
+ 
+#### Answer questions about the data
 
 This dataset contains `r nrow(instacart)` rows and `r ncol(instacart)` columns, with each row representing a single product from an instacart order. Variables include identifiers for user, order, and product; the order in which each product was added to the cart. There are several order-level variables, describing the day and time of the order, and number of days since prior order. Then there are several item-specific variables, describing the product name (e.g. Yogurt, Avocado), department (e.g. dairy and eggs, produce), and aisle (e.g. yogurt, fresh fruits), and whether the item has been ordered by this user in the past. In total, there are `r instacart |> select(product_id) |> distinct() |> count()` products found in `r instacart |> select(user_id, order_id) |> distinct() |> count()` orders from `r instacart |> select(user_id) |> distinct() |> count()` distinct users.
 
@@ -96,14 +97,14 @@ instacart |>
 
 ## Problem 2
 
-#### Read in `brfss_smart2010` data.
+#### Read in `brfss_smart2010` data
 
 ```{r}
 library(p8105.datasets)
 data("brfss_smart2010")
 ```
 
-#### First, do some data cleaning.
+#### Do data cleaning
 
 ```{r}
 brfss_df = 
@@ -119,7 +120,7 @@ brfss_df =
   mutate(response = factor(response, levels = c("Poor", "Fair", "Good", "Very good", "Excellent")))
 ```
 
-#### Using this dataset, do or answer the following:
+#### Using this dataset, answer the following three questions
 In 2002, which states were observed at 7 or more locations? What about in 2010?
 ```{r}
 table_2002 =
@@ -179,7 +180,9 @@ brfss_df |>
 
 ## Problem 3
 
-Load, tidy, merge, and otherwise organize the data sets. Final dataset should include all originally observed variables; exclude participants less than 21 years of age, and those with missing demographic data; and encode data with reasonable variable classes (i.e. not numeric, and using factors with the ordering of tables and plots in mind).
+#### Load, tidy, merge, and otherwise organize the data sets
+
+Final dataset should include all originally observed variables; exclude participants less than 21 years of age, and those with missing demographic data; and encode data with reasonable variable classes (i.e. not numeric, and using factors with the ordering of tables and plots in mind).
 
 ```{r covar, message=FALSE}
 covar_df = 
@@ -198,7 +201,7 @@ covar_df =
       1 ~ 'Less than high school',
       2 ~ 'High school equivalent',
       3 ~ 'More than high school')) |>
-  mutate(education = factor(education, levels = c('Less than high school', 'High school             equivalent', 'More than high school'), ordered = TRUE))
+  mutate(education = factor(education, levels = c('Less than high school', 'High school equivalent', 'More than high school'), ordered = TRUE))
 
 accel_df =
   read_csv('data/nhanes_accel.csv') |>
@@ -208,7 +211,7 @@ joined_df =
   left_join(covar_df, accel_df, by = 'seqn') 
 ```
 
-Produce a reader-friendly table for the number of men and women in each education category, and create a visualization of the age distributions for men and women in each education category. Comment on these items.
+#### Produce a reader-friendly table for the number of men and women in each education category
 
 ```{r, message=FALSE}
 joined_df |> 
@@ -221,3 +224,19 @@ joined_df |>
   knitr::kable()
 ```
 
+* From the table, it can be seen that the participants’ sex-ratio are mostly balanced in `Less than high school` category and `More than high school` category. In `High school equivalent `category, there are more male participants than female (35:23). The `More than high school education` category contains more participants compared to the other two categories.
+
+
+#### Create a visualization of the age distributions for men and women in each education category
+
+```{r}
+joined_df |>
+  ggplot(aes(x = education, y = age, fill = sex)) +
+  geom_boxplot() +
+  labs(title = "Age Distribution by Education and Gender", x = "Education", y = "Age")
+```
+
+* From the boxplot, it can be seen that participants with `More than high school` education is significantly younger than the other two education categories. In `High school equivalent` category, male participants are younger than female participants, while in the other two categories the age distributions are similar between sexes.
+
+
+Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate across minutes to create a total activity variable for each participant. Plot these total activities (y-axis) against age (x-axis); your plot should compare men to women and have separate panels for each education level. Include a trend line or a smooth to illustrate differences. Comment on your plot.
