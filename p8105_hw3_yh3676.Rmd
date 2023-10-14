@@ -208,3 +208,16 @@ joined_df =
   left_join(covar_df, accel_df, by = 'seqn') 
 ```
 
+Produce a reader-friendly table for the number of men and women in each education category, and create a visualization of the age distributions for men and women in each education category. Comment on these items.
+
+```{r, message=FALSE}
+joined_df |> 
+  group_by(sex,education) |> 
+  summarise(number = n()) |> 
+  pivot_wider(
+    names_from = education, 
+    values_from = number
+  ) |>
+  knitr::kable()
+```
+
