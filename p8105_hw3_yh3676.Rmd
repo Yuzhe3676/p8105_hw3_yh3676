@@ -5,11 +5,10 @@ date: "2023-10-13"
 output: github_document
 ---
 
-```{r setup}
+```{r setup, message=FALSE}
 library(tidyverse)
 library(ggridges)
 library(patchwork)
-
 library(p8105.datasets)
 
 knitr::opts_chunk$set(
@@ -94,6 +93,7 @@ instacart |>
   knitr::kable(digits = 2)
 ```
 
+
 ## Problem 2
 
 #### Read in `brfss_smart2010` data.
@@ -175,3 +175,36 @@ brfss_df |>
 ```
 
 * It can be seen that there is a significant increase in the `data_value` for `Very Good` response in NY State from 2006 to 2010.
+
+
+## Problem 3
+
+Load, tidy, merge, and otherwise organize the data sets. Final dataset should include all originally observed variables; exclude participants less than 21 years of age, and those with missing demographic data; and encode data with reasonable variable classes (i.e. not numeric, and using factors with the ordering of tables and plots in mind).
+
+```{r covar, message=FALSE}
+covar_df = 
+  read_csv('data/nhanes_covar.csv', skip = 4) |>
+  janitor::clean_names() |>
+  filter(age >= 21) |>
+  drop_na() |>
+  mutate(
+    sex = case_match(
+      sex,
+      1 ~ 'male',
+      2 ~ 'female')) |>
+  mutate(
+    education = case_match(
+      education,
+      1 ~ 'Less than high school',
+      2 ~ 'High school equivalent',
+      3 ~ 'More than high school')) |>
+  mutate(education = factor(education, levels = c('Less than high school', 'High school             equivalent', 'More than high school'), ordered = TRUE))
+
+accel_df =
+  read_csv('data/nhanes_accel.csv') |>
+  janitor::clean_names() 
+
+joined_df = 
+  left_join(covar_df, accel_df, by = 'seqn') 
+```
+
