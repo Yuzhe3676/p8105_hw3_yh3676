@@ -139,4 +139,30 @@ table_2010 =
 * In 2002, `r table_2002 |> pull(state)` were observed at 7 or more locations.
 * In 2010, `r table_2010 |> pull(state)` were observed at 7 or more locations.
 
-Construct a dataset that is limited to `Excellent` responses, and contains, year, state, and a variable that averages the `data_value` across locations within a state. Make a “spaghetti” plot of this average value over time within a state (that is, make a plot showing a line for each state across years – the `geom_line` geometry and group aesthetic will help).
+Construct a dataset that is limited to `Excellent` responses, and contains, year, state, and a variable that averages the `data_value` across locations within a state. Make a “spaghetti” plot of this average value over time within a state.
+
+```{r, message=FALSE}
+# Construct the dataset
+excellent_df =
+  brfss_df |>
+  filter(response == "Excellent") |>
+  group_by(year, state) |>
+  summarise(data_value_mean = mean(data_value, na.rm = TRUE))
+
+# Make a `spaghetti` plot
+excellent_df |>
+  ggplot(aes(x = year, y = data_value_mean, group = state, color = state)) +
+  geom_line() +
+  labs(title = "Spaghetti Plot of Average Value Over Time within each State",
+       x = "Year",
+       y = "Average Value") +
+theme(legend.position = "right")
+```
+
+* It can be seen that the average data value varies among the years as well as different states.
+
+Make a two-panel plot showing, for the years 2006, and 2010, distribution of data_value for responses (“Poor” to “Excellent”) among locations in NY State.
+```{r}
+
+```
+
