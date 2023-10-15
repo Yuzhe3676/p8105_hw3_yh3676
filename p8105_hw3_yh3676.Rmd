@@ -160,7 +160,7 @@ excellent_df |>
 theme(legend.position = "right")
 ```
 
-* It can be seen that the average data value varies among the years as well as different states.
+* It can be seen that the average data value varies among the years as well as different states and it's hard to say if there is a general trend.
 
 Make a two-panel plot showing, for the years 2006, and 2010, distribution of data_value for responses (“Poor” to “Excellent”) among locations in NY State.
 ```{r}
@@ -175,7 +175,7 @@ brfss_df |>
   theme_bw()
 ```
 
-* It can be seen that there is a significant increase in the `data_value` for `Very Good` response in NY State from 2006 to 2010.
+* It can be seen that there is a significant increase in the `data_value` for `Very Good` response in NY State from 2006 to 2010. There are also some changes of `data_value` with respect to `Poor`,`Fair`,`Good`and`Excellent`, but not that of obvious compared to `Very Good` category.
 
 
 ## Problem 3
