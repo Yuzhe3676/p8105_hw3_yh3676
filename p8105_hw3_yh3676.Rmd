@@ -239,4 +239,17 @@ joined_df |>
 * From the boxplot, it can be seen that participants with `More than high school` education is significantly younger than the other two education categories. In `High school equivalent` category, male participants are younger than female participants, while in the other two categories the age distributions are similar between sexes.
 
 
-Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate across minutes to create a total activity variable for each participant. Plot these total activities (y-axis) against age (x-axis); your plot should compare men to women and have separate panels for each education level. Include a trend line or a smooth to illustrate differences. Comment on your plot.
+#### Plot total activities against age with separate panels for each education level
+
+```{r, message=FALSE}
+joined_df |>
+  mutate(total_act = rowSums(across(min1:min1440))) |>
+  ggplot(aes(x = age, y = total_act, color = sex)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ education) +
+  labs(title = "Total Activities Against Age", x = "Age", y = "Total Activity")
+```
+
+* From the above graph, generally, total activity within a day goes down when age increases. In `High school equivalent` and `More than high school` education categories, female participants tend to have more total daily activity than male, while in `Less than high school` category male have more total daily activity than female when they come older.
+
